@@ -26,3 +26,6 @@
 - "builder" - directory contain builder code;
 - "sources" - directory contain project sources;
 - "dist" - distribution directory will be contain compiled sources;
+- "builder/data.js" - describe your sources here;
+- "builder/LazyContainer.js" - require your builder libraries here;
+- "builder/handlers" - place your source handlers here;
