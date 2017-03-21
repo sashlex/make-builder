@@ -1,0 +1,10 @@
+# disallow
+node_modules/
+npm-debug.log
+dist/*
+working
+.projectile
+sources/node_modules/
+
+# allow
+!dist/.gitkeep

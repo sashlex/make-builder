@@ -1,0 +1,23 @@
+{
+  "name": "make-builder",
+  "version": "0.0.1",
+  "description": "Handmade builder.",
+  "main": "index.js",
+  "scripts": {
+    "build": "node builder build",
+    "watch": "node builder watch",
+    "clean": "node builder clean",
+    "app": "cd ./dist &&  DEBUG=express:* node index"
+  },
+  "author": "sashlex",
+  "license": "MIT",
+  "devDependencies": {
+    "js-beautify": "^1.6.11",
+    "less": "^2.7.2",
+    "pug": "^2.0.0-beta11",
+    "shelljs": "^0.7.7"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.0"
+  }
+}
