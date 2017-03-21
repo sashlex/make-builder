@@ -1,14 +1,14 @@
 {
   "name": "sources",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "sources",
   "main": "index.js",
   "scripts": {
      "postinstall": "cd ../dist && npm install",
      "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "sashlex",
+  "license": "MIT",
   "dependencies": {
     "express": "^4.15.2"
   }

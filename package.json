@@ -1,7 +1,7 @@
 {
   "name": "make-builder",
   "version": "0.0.1",
-  "description": "Handmade builder.",
+  "description": "Yourself written builder.",
   "main": "index.js",
   "scripts": {
     "build": "node builder build",
