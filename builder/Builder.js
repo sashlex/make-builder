@@ -13,8 +13,7 @@ class Builder {
    constructor() {
 
       console.log( '-> * * * * * * * * * * * * * * * * * * * * * * * * * * * * |' );
-      const LazyContainer = require( './LazyContainer' );
-      this.lc = new LazyContainer( this );
+      this.lc = require( './LazyContainer' );
 
       /* watcher configs */
       this.watchStarted = false;

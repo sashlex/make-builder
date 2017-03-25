@@ -4,11 +4,12 @@
 
 ### Usage:
 - for use this builder, you must understand how it works;
-- make "npm install" it in root and in "source" directories (in "dist" after first build);
+- make "npm install" in root and in "source" directories (in "dist" after first build);
 - try run commands, go through code, understand, and make your changes;
 - you must change and improve builder code as you want;
 - builder work out of the box and demonstrate basic usage;
 - the lack of this approach, where we change builder code as we want, is that each project will have own specified builder code;
+- this is mostly boilerplate;
 
 ---
 ### Default build commands:

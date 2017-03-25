@@ -10,12 +10,11 @@ class LazyContainer {
     * @param {object} parent - parent reference
     * @constructor
     */
-   constructor( parent ) {
+   constructor() {
 
       /* set always used parameters */
 
       /* configure data */
-      this.parent = parent;
       this.data = require( './data' );
 
       /* normalize data for crossplatform compatible */
@@ -28,6 +27,14 @@ class LazyContainer {
          this.data.paths[ i ].buildDist && ( this.data.paths[ i ].buildDist = this.path.normalize( this.data.paths[ i ].buildDist ) );
          this.data.paths[ i ].destroyDist && ( this.data.paths[ i ].destroyDist = this.path.normalize( this.data.paths[ i ].destroyDist ) );
       }
+   }
+
+   /**
+    * Set parent reference ( this <- parent )
+    * @param {object} parent - parent reference
+    **/
+   setParent( parent ) {
+      this.parent = parent;
    }
 
    /**
@@ -108,4 +115,4 @@ class LazyContainer {
    }
 }
 
-module.exports = LazyContainer;
+module.exports = new LazyContainer();
