@@ -1,5 +1,7 @@
 'use strict';
 
+const container = require( './container' );
+
 /**
  * Class Builder represents application builder
  * @class
@@ -11,9 +13,6 @@ class Builder {
     * @constructor
     */
    constructor() {
-
-      console.log( '-> * * * * * * * * * * * * * * * * * * * * * * * * * * * * |' );
-      this.lc = require( './LazyContainer' );
 
       /* watcher configs */
       this.watchStarted = false;
@@ -36,7 +35,7 @@ class Builder {
    build( command, argument ) {
       /* timer */
       this.start = new Date();
-      this.lc.consoleMessage( 'Builder start', command, argument );
+      container.consoleMessage( 'Builder start', command, argument );
 
       /* fix command if argument not empty */
       command = argument ? ( command + 'Type' ) : command;
@@ -64,8 +63,8 @@ class Builder {
          return this.clean( argument );
          break;
       default:
-         this.lc.consoleMessage( 'Command not found' );
-         return this.lc.promise.resolve( undefined );
+         container.consoleMessage( 'Command not found' );
+         return container.promise.resolve( undefined );
       }
    }
 
@@ -74,34 +73,34 @@ class Builder {
     * @return {object} promise
     */
    buildAll() {
-      return this.lc.promise.resolve()
+      return container.promise.resolve()
 
       /* before build asset */
          .then( () => {
-            this.lc.consoleMessage( 'Build asset' );
-            this.buildAsset = this.buildAsset || require( this.lc.data.handlersDir + 'build-asset' ); // here require on request ( lazy load )
-            return this.buildAsset( this.lc, this.lc.data.paths );
+            container.consoleMessage( 'Build asset' );
+            this.buildAsset = this.buildAsset || require( container.data.handlersDir + 'build-asset' ); // here require on request ( lazy load )
+            return this.buildAsset( container, container.data.paths );
          })
 
       /* build html */
          .then( () => {
-            this.lc.consoleMessage( 'Build html' );
-            this.buildHtml = this.buildHtml || require( this.lc.data.handlersDir + 'build-html' ); // here require on request ( lazy load )
-            return this.buildHtml( this.lc, this.lc.data.paths );
+            container.consoleMessage( 'Build html' );
+            this.buildHtml = this.buildHtml || require( container.data.handlersDir + 'build-html' ); // here require on request ( lazy load )
+            return this.buildHtml( container, container.data.paths );
          })
 
       /* build css */
          .then( () => {
-            this.lc.consoleMessage( 'Build css' );
-            this.buildCss = this.buildCss || require( this.lc.data.handlersDir + 'build-css' ); // here require on request ( lazy load )
-            return this.buildCss( this.lc, this.lc.data.paths );
+            container.consoleMessage( 'Build css' );
+            this.buildCss = this.buildCss || require( container.data.handlersDir + 'build-css' ); // here require on request ( lazy load )
+            return this.buildCss( container, container.data.paths );
          })
 
       /* build js */
          .then( () => {
-            this.lc.consoleMessage( 'Build js' );
-            this.buildJs = this.buildJs || require( this.lc.data.handlersDir + 'build-js' );
-            return this.buildJs( this.lc, this.lc.data.paths );
+            container.consoleMessage( 'Build js' );
+            this.buildJs = this.buildJs || require( container.data.handlersDir + 'build-js' );
+            return this.buildJs( container, container.data.paths );
          })
          .catch( error => {
             console.log( error );
@@ -115,31 +114,31 @@ class Builder {
     * @return {object} promise
     */
    buildType( type ) {
-      return this.lc.promise.resolve()
+      return container.promise.resolve()
          .then( () => {
             switch( type ) {
             case 'asset':
-               this.lc.consoleMessage( 'Build asset' );
-               this.buildAsset = this.buildAsset || require( this.lc.data.handlersDir + 'build-asset' );
-               return this.buildAsset( this.lc, this.lc.data.paths );
+               container.consoleMessage( 'Build asset' );
+               this.buildAsset = this.buildAsset || require( container.data.handlersDir + 'build-asset' );
+               return this.buildAsset( container, container.data.paths );
                break;
             case 'html':
-               this.lc.consoleMessage( 'Build html' );
-               this.buildHtml = this.buildHtml || require( this.lc.data.handlersDir + 'build-html' );
-               return this.buildHtml( this.lc, this.lc.data.paths );
+               container.consoleMessage( 'Build html' );
+               this.buildHtml = this.buildHtml || require( container.data.handlersDir + 'build-html' );
+               return this.buildHtml( container, container.data.paths );
                break;
             case 'css':
-               this.lc.consoleMessage( 'Build css' );
-               this.buildCss = this.buildCss || require( this.lc.data.handlersDir + 'build-css' );
-               return this.buildCss( this.lc, this.lc.data.paths );
+               container.consoleMessage( 'Build css' );
+               this.buildCss = this.buildCss || require( container.data.handlersDir + 'build-css' );
+               return this.buildCss( container, container.data.paths );
                break;
             case 'js':
-               this.lc.consoleMessage( 'Build js' );
-               this.buildJs = this.buildJs || require( this.lc.data.handlersDir + 'build-js' );
-               return this.buildJs( this.lc, this.lc.data.paths );
+               container.consoleMessage( 'Build js' );
+               this.buildJs = this.buildJs || require( container.data.handlersDir + 'build-js' );
+               return this.buildJs( container, container.data.paths );
                break;
             default:
-               this.lc.consoleMessage( 'Source type not found', type );
+               container.consoleMessage( 'Source type not found', type );
                return this.promise.resolve( undefined );
             }
          })
@@ -155,31 +154,31 @@ class Builder {
     * @return {object} promise
     */
    buildFile( file ) {
-      return this.lc.promise.resolve()
+      return container.promise.resolve()
          .then( () => {
             switch( file.type ) {
             case 'asset':
-               this.lc.consoleMessage( 'Build asset' );
-               this.buildAsset = this.buildAsset || require( this.lc.data.handlersDir + 'build-asset' );
-               return this.buildAsset( this.lc, [ file ] );
+               container.consoleMessage( 'Build asset' );
+               this.buildAsset = this.buildAsset || require( container.data.handlersDir + 'build-asset' );
+               return this.buildAsset( container, [ file ] );
                break;
             case 'html':
-               this.lc.consoleMessage( 'Build html file:', file.source );
-               this.buildHtml = this.buildHtml || require( this.lc.data.handlersDir + 'build-html' );
-               return this.buildHtml( this.lc, [ file ] );
+               container.consoleMessage( 'Build html file:', file.source );
+               this.buildHtml = this.buildHtml || require( container.data.handlersDir + 'build-html' );
+               return this.buildHtml( container, [ file ] );
                break;
             case 'css':
-               this.lc.consoleMessage( 'Build css file:', file.source );
-               this.buildCss = this.buildCss || require( this.lc.data.handlersDir + 'build-css' );
-               return this.buildCss( this.lc, [ file ] );
+               container.consoleMessage( 'Build css file:', file.source );
+               this.buildCss = this.buildCss || require( container.data.handlersDir + 'build-css' );
+               return this.buildCss( container, [ file ] );
                break;
             case 'js':
-               this.lc.consoleMessage( 'Build js file:', file.source );
-               this.buildJs = this.buildJs || require( this.lc.data.handlersDir + 'build-js' );
-               return this.buildJs( this.lc, [ file ] );
+               container.consoleMessage( 'Build js file:', file.source );
+               this.buildJs = this.buildJs || require( container.data.handlersDir + 'build-js' );
+               return this.buildJs( container, [ file ] );
                break;
             default:
-               this.lc.consoleMessage( 'Source type not found', file.type );
+               container.consoleMessage( 'Source type not found', file.type );
                return this.promise.resolve( undefined );
             }
          })
@@ -199,11 +198,11 @@ class Builder {
          .then( () => {
 
             /* prepare watching files */
-            let watchFiles = this.lc.data.paths.slice();
+            let watchFiles = container.data.paths.slice();
 
             /* filter files by type */
             if( type ) {
-               this.lc.data.paths.forEach( ( value, index ) => {
+               container.data.paths.forEach( ( value, index ) => {
 
                   /* if type defined, watch files by type */
                   if( type !== value.type ) {
@@ -213,7 +212,7 @@ class Builder {
             }
 
             /* filter files by source field */
-            this.lc.data.paths.forEach( ( value, index ) => {
+            container.data.paths.forEach( ( value, index ) => {
 
                /* if no source remove */
                if( !value.source ) {
@@ -224,7 +223,7 @@ class Builder {
 
             /* define listeners */
             watchFiles.forEach( value => {
-               this.lc.consoleMessage( 'Watch file:', value.source );
+               container.consoleMessage( 'Watch file:', value.source );
 
                /* Set watcher */
                this.watch_file( value, this.setListennerAttempts + 1, this.setListennerDelay )  // ++ -> fix counter ( bacause decreased on watcher starts )
@@ -235,7 +234,7 @@ class Builder {
                      /* remove destination file and close watcher */
                      this.removePath( value )
                         .then( () => {
-                           this.lc.consoleMessage( 'File unwatched:', value.source );
+                           container.consoleMessage( 'File unwatched:', value.source );
                         })
                         .then( () => {
                            return this.afterWork();
@@ -258,13 +257,13 @@ class Builder {
     * @return {object} promise
     */
    watch_file( file, attempt_counter, attempt_delay ) {
-      return new this.lc.promise( ( resolve, reject ) => {
+      return new container.promise( ( resolve, reject ) => {
          try {
             attempt_counter --; // how times to try watch
             let handle_timeout,
 
                 /* set listener */
-                watcher = this.lc.watch( file.source, { persistent: true }, ( event ) => {
+                watcher = container.watch( file.source, { persistent: true }, ( event ) => {
 
                    /* execution timer */
                    this.start = new Date();
@@ -279,7 +278,7 @@ class Builder {
                          /* make trying watch again */
                          setTimeout( () => {
                             if( attempt_counter ) {
-                               this.lc.consoleMessage( 'Trying watch file again, ' + ( this.setListennerAttempts - attempt_counter + 1 ) + ' attempt:', file.source ); // + 1 -> to prefent show from 0
+                               container.consoleMessage( 'Trying watch file again, ' + ( this.setListennerAttempts - attempt_counter + 1 ) + ' attempt:', file.source ); // + 1 -> to prefent show from 0
                                return resolve( this.watch_file( file, attempt_counter, attempt_delay ) ); // reset watcher
                             } else {
                                return reject( new Error( 'File was renamed!' ), watcher ); // attempts ends return error
@@ -301,7 +300,7 @@ class Builder {
                             /* make trying watch again */
                             setTimeout( () => {
                                if( attempt_counter ) {
-                                  this.lc.consoleMessage( 'Trying watch file again, ' + ( this.setListennerAttempts - attempt_counter + 1 ) + ' attempt:', file.source );
+                                  container.consoleMessage( 'Trying watch file again, ' + ( this.setListennerAttempts - attempt_counter + 1 ) + ' attempt:', file.source );
                                   return resolve( this.watch_file( file, attempt_counter, attempt_delay ) ); // reset watcher
                                } else {
                                   return reject( error, watcher ); // attempts ends return error
@@ -312,7 +311,7 @@ class Builder {
                          });
                       clearTimeout( handle_timeout );
                       return undefined; // disable editor error notice
-                   }, this.lc.handle_delay );
+                   }, container.handle_delay );
 
                    return undefined; // disable editor error notice
                 });
@@ -328,7 +327,7 @@ class Builder {
                   /* make trying watch again */
                   setTimeout( () => {
                      if( attempt_counter ) {
-                        this.lc.consoleMessage( 'Trying watch file again, ' + ( this.setListennerAttempts - attempt_counter + 1 ) + ' attempt:', file.source );
+                        container.consoleMessage( 'Trying watch file again, ' + ( this.setListennerAttempts - attempt_counter + 1 ) + ' attempt:', file.source );
                         return resolve( this.watch_file( file, attempt_counter, attempt_delay ) ); // reset watcher
                      } else {
                         return reject( error, watcher ); // attempts ends return error
@@ -344,7 +343,7 @@ class Builder {
             /* make trying watch again */
             setTimeout( () => {
                if( attempt_counter ) {
-                  this.lc.consoleMessage( 'Trying watch file again, ' + ( this.setListennerAttempts - attempt_counter + 1 ) + ' attempt:', file.source );
+                  container.consoleMessage( 'Trying watch file again, ' + ( this.setListennerAttempts - attempt_counter + 1 ) + ' attempt:', file.source );
                   return resolve( this.watch_file( file, attempt_counter, attempt_delay ) ); // reset watcher
                } else {
                   return reject( error ); // attempts ends return error
@@ -363,7 +362,7 @@ class Builder {
    watch_handler( file ) {
 
       /* get file stat, that mean the file is exists */
-      return this.lc.lstat( file.source )
+      return container.lstat( file.source )
          .then( stat => {
 
             /* build by file type */
@@ -384,14 +383,14 @@ class Builder {
       /* check is such type exists */
       if( type  ) {
          let found = false;
-         for( let i = 0; i < this.lc.data.paths.length; i ++ ) {
-            if( type === this.lc.data.paths[ i ].type ) {
+         for( let i = 0; i < container.data.paths.length; i ++ ) {
+            if( type === container.data.paths[ i ].type ) {
                found = true;
                break;
             }
          };
          if( !found ) {
-            this.lc.consoleMessage( 'Source type not found', type );
+            container.consoleMessage( 'Source type not found', type );
             return this.afterWork();
          }
       } else {
@@ -399,9 +398,9 @@ class Builder {
       }
 
       /* type found continue clean */
-      this.lc.consoleMessage( 'Destroy ' + type );
-      this.remove = this.remove || require( this.lc.data.handlersDir + 'remove-whatever' );
-      return this.remove( this.lc, this.lc.data.paths, type )
+      container.consoleMessage( 'Destroy ' + type );
+      this.remove = this.remove || require( container.data.handlersDir + 'remove-whatever' );
+      return this.remove( container, container.data.paths, type )
          .then( () => {
             return this.afterWork();
          })
@@ -423,11 +422,11 @@ class Builder {
 
       /* set destroy destination */
       let dist = path.destroyDist || path.buildDist;
-      this.lc.consoleMessage( 'Destroy ' + dist );
+      container.consoleMessage( 'Destroy ' + dist );
 
       /* remove */
-      this.remove = this.remove || require( this.lc.data.handlersDir + 'remove-whatever' );
-      return this.remove( this.lc, [ path ], path.type );
+      this.remove = this.remove || require( container.data.handlersDir + 'remove-whatever' );
+      return this.remove( container, [ path ], path.type );
    }
 
    /**
@@ -438,8 +437,8 @@ class Builder {
 
       /* timer */
       this.end = new Date();
-      return this.lc.consoleMessage( '--- ok ---', ( ( this.end - this.start ) / 1000 ) + ' sec' );
+      return container.consoleMessage( '--- ok ---', ( ( this.end - this.start ) / 1000 ) + ' sec' );
    }
 }
 
-module.exports = Builder;
+module.exports = new Builder();

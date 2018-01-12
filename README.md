@@ -1,6 +1,5 @@
 ## Make your project builder.
-***Tested only on ubuntu linux.***
-***This project not claim on best practices, it just work.***
+***This project not claim on best practices.***
 
 ### Usage:
 - for use this builder, you must understand how it works;
@@ -14,6 +13,7 @@
 ---
 ### Default build commands:
 ***Commands configurable from package.json***
+- "npm run test" - test builder;
 - "npm run build" - build all sources;
 - "npm run build html" - build sources by type (default: asset, html, css, js);
 - "npm run watch" - watch all sources;
@@ -30,4 +30,4 @@
 - "builder/Builder.js" - main builder file;
 - "builder/data.js" - describe your sources here;
 - "builder/LazyContainer.js" - require your builder libraries here;
-- "builder/handlers" - place your source handlers here;
+- "builder/workers" - place your source handlers here;

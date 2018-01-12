@@ -1,15 +1,11 @@
 {
-  "name": "sources",
-  "version": "0.0.1",
-  "description": "sources",
-  "main": "index.js",
-  "scripts": {
-     "postinstall": "cd ../dist && npm install",
-     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "sashlex",
-  "license": "MIT",
-  "dependencies": {
-    "express": "^4.15.2"
-  }
+   "name": "application",
+   "version": "0.0.1",
+   "description": "application sources",
+   "main": "index.js",
+   "author": "sashlex",
+   "license": "MIT",
+   "dependencies": {
+      "express": "^4.15.2"
+   }
 }

@@ -1,10 +1,10 @@
 'use strict';
 
-const Builder = require( './Builder' );
-const builder = new Builder();
+/* builder entry point */
+const builder = require( './builder' );
 const parameters = process.argv.slice( 2 );
-let command = parameters[ 0 ];
-let argument = command && parameters[ 1 ]; // if command not empty set argument
+const command = parameters[ 0 ];
+const argument = command && parameters[ 1 ]; // if command not empty set argument
 
-/* main job */
+/* call main job */
 builder.build( command, argument );
