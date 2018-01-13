@@ -13,7 +13,6 @@
 ---
 ### Default build commands:
 ***Commands configurable from package.json***
-- "npm run test" - test builder;
 - "npm run build" - build all sources;
 - "npm run build html" - build sources by type (default: asset, html, css, js);
 - "npm run watch" - watch all sources;
@@ -21,6 +20,7 @@
 - "npm run clean" - clean "dist" directory;
 - "npm run clean html" - clean "dist" directory by type (default: asset, html, css, js);
 - "npm run app" - run your application;
+- "npm run test" - test builder;
 
 ---
 ### Overview:
