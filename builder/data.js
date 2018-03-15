@@ -12,16 +12,36 @@ const BUILDER_DIR = Path.normalize( ROOT_DIR + '/builder' );
 const WORKER_DIR = Path.normalize( BUILDER_DIR + '/workers' );
 
 /* sources directory */
-const SOURCE_DIR = Path.normalize( ROOT_DIR + '/sources' );
+const SRC_DIR = Path.normalize( ROOT_DIR + '/src' );
 
 /* distribution directory */
 const DIST_DIR = Path.normalize( ROOT_DIR + '/dist' );
 
-module.exports = {
+/**
+ * Show message in console
+ * @param { * } arguments
+ * @return { void }
+ */
+function log() {
+   const date = new Date();
+   const hours = date.getHours();
+   const minutes = date.getMinutes();
+   const seconds = ( '0' + date.getSeconds()).slice( -2 );
+   const miliseconds = date.getMilliseconds();
+   const stack = new Error().stack;
+   const caller = stack.split( '\n' )[ 2 ].trim();
+   const callerFile = Path.basename( caller ).replace( /\)$/, '' );
+
+   /* without undefined values */
+   return console.log( `-> ${ [ ...arguments ].filter( arg => arg !== undefined ).join( ' | ' ) } | ${ hours }:${ minutes }:${ seconds }:${ miliseconds } | ${ callerFile } ` );
+}
+
+const data = {
+   log: log,
    ROOT_DIR: ROOT_DIR,
    BUILDER_DIR: BUILDER_DIR,
    WORKER_DIR: WORKER_DIR,
-   SOURCE_DIR: SOURCE_DIR,
+   SRC_DIR: SRC_DIR,
    DIST_DIR: DIST_DIR,
 
    /* Important: place in execution order */
@@ -31,7 +51,7 @@ module.exports = {
        * example:
        * {
        *    type: 'asset',
-       *    source: SOURCES_DIR + 'assets/images',
+       *    src: SRC_DIR + 'assets/images',
        *    dist: DIST_DIR + 'assets/images',
        * }
        ***/
@@ -39,32 +59,40 @@ module.exports = {
       /* root */
       {
          type: 'asset',
-         source: SOURCE_DIR + 'package.json',
+         src: SRC_DIR + 'package.json',
          dist: DIST_DIR + 'package.json'
       },
       {
          type: 'html',
-         source: SOURCE_DIR + 'index.mustache',
+         src: SRC_DIR + 'index.mustache',
          dist: DIST_DIR + 'index.html'
       },
       {
          type: 'js',
-         source: SOURCE_DIR + 'index.js',
+         src: SRC_DIR + 'index.js',
          dist: DIST_DIR + 'index.js'
       },
 
       /* styles */
       {
          type: 'css',
-         source: SOURCE_DIR + 'styles/styles.less',
+         src: SRC_DIR + 'styles/styles.less',
          dist: DIST_DIR + 'styles/styles.css'
       },
 
       /* scripts */
       {
          type: 'js',
-         source: SOURCE_DIR + 'scripts/script.js',
+         src: SRC_DIR + 'scripts/script.js',
          dist: DIST_DIR + 'scripts/script.js'
       }
    ]
 };
+
+/* fix data paths */
+data.paths = data.paths.map( v => {
+   v.src && ( v.src = Path.normalize( v.src ));
+   v.dist && ( v.dist = Path.normalize( v.dist ));
+});
+
+module.exports = data;
