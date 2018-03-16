@@ -54,7 +54,7 @@ class Builder {
 
          /* build html */
          log( 'Building html' );
-         // await html( data.paths );
+         await html( data.paths );
 
          /* build css */
          log( 'Build css' );

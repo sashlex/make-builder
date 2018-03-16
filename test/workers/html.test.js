@@ -85,6 +85,27 @@ test.cb( 'compile template, src file and dist is dotted directory with slash', t
       .catch( e => console.log( e ));
 });
 
+test.cb( 'bad parameter, src directory', t => {
+   t.plan( 1 );
+
+   const data = {
+      paths: [{
+         type: 'html',
+         src: `${ tc.SRC_DIR }`,
+         dist: `${ tc.DIST_DIR }/test-5.html`,
+      }],
+      test: true
+   };
+
+   /* compile file */
+   html( data )
+      .then( error => {
+         t.deepEqual( error.message, 'Source is not file!' );
+         return t.end();
+      })
+      .catch( e => console.log( e ));
+});
+
 test.cb( 'bad parameter, src directory with asterisk and dist is directory', t => {
    t.plan( 1 );
 
@@ -125,27 +146,6 @@ test.cb( 'bad parameter, src with asterisk path', t => {
    html( data )
       .then( error => {
          t.deepEqual( error.message, 'Source not found!' );
-         return t.end();
-      })
-      .catch( e => console.log( e ));
-});
-
-test.cb( 'bad parameter, src directory', t => {
-   t.plan( 1 );
-
-   const data = {
-      paths: [{
-         type: 'html',
-         src: `${ tc.SRC_DIR }`,
-         dist: `${ tc.DIST_DIR }/test-5.html`,
-      }],
-      test: true
-   };
-
-   /* compile file */
-   html( data )
-      .then( error => {
-         t.deepEqual( error.message, 'Source is not file!' );
          return t.end();
       })
       .catch( e => console.log( e ));
@@ -194,30 +194,6 @@ test.cb( 'bad parameter, dist with asterisk', t => {
          return t.end();
       })
 
-      .catch( e => console.log( e ));
-});
-
-test.cb( 'bad parameter, dist with double asterisk', t => {
-   t.plan( 1 );
-
-   const data = {
-      paths: [{
-         type: 'html',
-         src: `${ tc.SRC_DIR }/test.njk`,
-         dist: `${ tc.DIST_DIR }/**`,
-      }],
-      test: true
-   };
-
-   /* create test file */
-   Fs.writeFileSync( data.paths[ 0 ].src, '' );
-
-   /* execute test */
-   html( data )
-      .then( error => {
-         t.deepEqual( error.message, 'Bad dist parameter!' );
-         return t.end();
-      })
       .catch( e => console.log( e ));
 });
 
