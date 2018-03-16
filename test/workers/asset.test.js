@@ -14,19 +14,13 @@ test.before(() => tc.cleanup());
 test.after.always(() => tc.cleanup());
 
 test.cb( 'copy file, src and dist are files', t => {
-   /*
-     copy file from src to dist:
-     src: 'src/file.json'
-     dist: 'dist/file-prod.json'
-   */
-
    t.plan( 1 );
 
    const data = {
       paths: [{
          type: 'asset',
          src: `${ tc.SRC_DIR }/test-1.json`,
-         dist: `${ tc.DIST_DIR }/test/test-test-1.json`,
+         dist: `${ tc.DIST_DIR }/test-1/test-a-1.json`,
       }]
    };
 
@@ -44,19 +38,13 @@ test.cb( 'copy file, src and dist are files', t => {
 });
 
 test.cb( 'copy file, src file and dist is directory', t => {
-   /*
-     copy file from src to dist:
-     src: 'src/file.json'
-     dist: 'dist'
-   */
-
    t.plan( 1 );
 
    const data = {
       paths: [{
          type: 'asset',
          src: `${ tc.SRC_DIR }/test-2.json`,
-         dist: `${ tc.DIST_DIR }/test`,
+         dist: `${ tc.DIST_DIR }/test-2`,
       }]
    };
 
@@ -74,12 +62,6 @@ test.cb( 'copy file, src file and dist is directory', t => {
 });
 
 test.cb( 'copy file, src file and dist is dotted directory with slash', t => {
-   /*
-     copy file from src to dist:
-     src: 'src/file.json'
-     dist: 'dist.dir/'
-   */
-
    t.plan( 1 );
 
    const data = {
@@ -103,43 +85,7 @@ test.cb( 'copy file, src file and dist is dotted directory with slash', t => {
       .catch( e => console.log( e ));
 });
 
-test.cb( 'copy file, src file and dist is directory', t => {
-   /*
-     copy file from src to dist:
-     src: 'src/file.json'
-     dist: 'dist'
-   */
-
-   t.plan( 1 );
-
-   const data = {
-      paths: [{
-         type: 'asset',
-         src: `${ tc.SRC_DIR }/test-4.json`,
-         dist: `${ tc.DIST_DIR }/test`,
-      }]
-   };
-
-   /* create test file */
-   Fs.writeFileSync( data.paths[ 0 ].src, JSON.stringify({ d: 'e' }));
-
-   /* execute test */
-   asset( data )
-      .then( _=> {
-         const obj = JSON.parse( Fs.readFileSync( `${ data.paths[ 0 ].dist }/test-4.json` ));
-         t.deepEqual( obj.d, 'e' );
-         return t.end();
-      })
-      .catch( e => console.log( e ));
-});
-
 test.cb( 'copy file, src directory and dist is file', t => {
-   /*
-     copy file from src to dist:
-     src: 'src/'
-     dist: 'dist/file.json'
-   */
-
    t.plan( 1 );
 
    const data = {
@@ -164,12 +110,6 @@ test.cb( 'copy file, src directory and dist is file', t => {
 });
 
 test.cb( 'copy files, src directory with asterisk and dist is directory', t => {
-   /*
-     copy files from directory:
-     src: 'src/*'
-     dist: 'dist'
-   */
-
    t.plan( 1 );
 
    const data = {
@@ -195,12 +135,6 @@ test.cb( 'copy files, src directory with asterisk and dist is directory', t => {
 });
 
 test.cb( 'copy directory, src directory and dist is directory', t => {
-   /*
-      copy file:
-      src: 'src'
-      dist: 'dist'
-   */
-
    t.plan( 1 );
 
    const data = {
@@ -226,12 +160,6 @@ test.cb( 'copy directory, src directory and dist is directory', t => {
 });
 
 test.cb( 'bad parameter, src with asterisk path', t => {
-   /*
-     error:
-     src: 'src/**\/*'
-     dist: 'dist'
-   */
-
    t.plan( 1 );
 
    const data = {
@@ -253,12 +181,6 @@ test.cb( 'bad parameter, src with asterisk path', t => {
 });
 
 test.cb( 'bad parameter, src with double asterisk', t => {
-   /*
-     error:
-     src: 'src/**'
-     dist: 'dist'
-   */
-
    t.plan( 1 );
 
    const data = {
@@ -280,12 +202,6 @@ test.cb( 'bad parameter, src with double asterisk', t => {
 });
 
 test.cb( 'bad parameter, dist with asterisk', t => {
-   /*
-     error:
-     src: 'src/file.json'
-     dist: 'dist/*'
-   */
-
    t.plan( 1 );
 
    const data = {
@@ -309,43 +225,7 @@ test.cb( 'bad parameter, dist with asterisk', t => {
       .catch( e => console.log( e ));
 });
 
-test.cb( 'bad parameter, dist with double asterisk', t => {
-   /*
-     error:
-     src: 'src/file.json'
-     dist: 'dist/**'
-   */
-
-   t.plan( 1 );
-
-   const data = {
-      paths: [{
-         type: 'asset',
-         src: `${ tc.SRC_DIR }/test.json`,
-         dist: `${ tc.DIST_DIR }/**`,
-      }],
-      test: true
-   };
-
-   /* create test file */
-   Fs.writeFileSync( data.paths[ 0 ].src, '' );
-
-   /* execute test */
-   asset( data )
-      .then( error => {
-         t.deepEqual( error.message, 'Bad dist parameter!' );
-         return t.end();
-      })
-      .catch( e => console.log( e ));
-});
-
 test.cb( 'bad parameter, dist with asterisk and slash at end', t => {
-   /*
-     error:
-     src: 'src/file.json'
-     dist: 'dist/*\/'
-   */
-
    t.plan( 1 );
 
    const data = {
@@ -369,14 +249,7 @@ test.cb( 'bad parameter, dist with asterisk and slash at end', t => {
       .catch( e => console.log( e ));
 });
 
-
 test.cb( 'bad parameter, dist with double asterisk and slash at end', t => {
-   /*
-     error:
-     src: 'src'
-     dist: 'dist/**\/'
-   */
-
    t.plan( 1 );
 
    const data = {
@@ -398,12 +271,6 @@ test.cb( 'bad parameter, dist with double asterisk and slash at end', t => {
 });
 
 test.cb( 'bad parameter, dist with double asterisk at end', t => {
-   /*
-     error:
-     src: 'src'
-     dist: 'dist/**'
-   */
-
    t.plan( 1 );
 
    const data = {
@@ -419,6 +286,27 @@ test.cb( 'bad parameter, dist with double asterisk at end', t => {
    asset( data )
       .then( error => {
          t.deepEqual( error.message, 'Bad dist parameter!' );
+         return t.end();
+      })
+      .catch( e => console.log( e ));
+});
+
+test.cb( 'other parameter asset', t => {
+   t.plan( 1 );
+
+   const data = {
+      paths: [{
+         type: 'bad',
+         src: `${ tc.SRC_DIR }`,
+         dist: `${ tc.DIST_DIR }`,
+      }],
+      test: true
+   };
+
+   /* execute test */
+   asset( data )
+      .then( result => {
+         t.deepEqual( result, data );
          return t.end();
       })
       .catch( e => console.log( e ));

@@ -1,16 +1,4 @@
 'use strict';
-/*
-
-Examples:
-paths: [
-   {
-      type: 'asset',
-      src: 'src/file.json',
-      dist: 'dist/file-prod.json'
-   },
-]
-
-*/
 
 const Path = require( 'path' );
 const shell = require( 'shelljs' );
@@ -20,16 +8,14 @@ const stat = Util.promisify( Fs.stat );
 
 /**
  * Asset builder
- * @param { object } paths
- * @param { object } test
- * @return { undefined }
+ * @param { object } data
+ * @param { array } data.paths
+ * @param { boolean } data.test
+ * @return { object } data
  */
 module.exports = async data => {
    const log = data.log || ( str => console.log( str ));
-   let src = {}, // source info
-       dist = {}, // dist info
-       distBasename,
-       asterisk = '/*';
+   let error, asterisk = '/*';
 
    /* return if no data */
    if( ! Array.isArray( data.paths )) {
@@ -37,10 +23,16 @@ module.exports = async data => {
    }
 
    /* go through data */
-   return Promise.all( data.paths.map( async v => {
+   await Promise.all( data.paths.map( async v => {
+      let src = {}, // source info
+          dist = {}, // dist info
+          distBasename;
 
       /* check params */
-      if( v.type !== 'asset' || ! v.src || ! v.dist ) {
+      if( v.type !== 'asset'  ) {
+         return undefined; // skip other type
+      }
+      if( ! v.src || ! v.dist ) {
          throw new Error( 'Src or dist is empty!' );
       }
 
@@ -86,6 +78,6 @@ module.exports = async data => {
          shell.cp( '-R', v.src, v.dist );
       }
       return undefined;
-   }))
-      .catch( e => ! data.test && log( e ) || e ); // return error
+   })).catch( e => ! data.test && log( e ) || ( error = e )); // return error
+   return error || data;
 };
