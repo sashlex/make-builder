@@ -6,8 +6,8 @@ const Less = require( 'less' );
 const Util = require( 'util' );
 const Fs = require( 'fs' );
 const stat = Util.promisify( Fs.stat );
-const writeFile = Util.promisify( Fs.writeFile );
 const readFile = Util.promisify( Fs.readFile );
+const writeFile = Util.promisify( Fs.writeFile );
 
 /**
  * Css builder

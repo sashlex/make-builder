@@ -58,11 +58,12 @@ class Builder {
 
          /* build css */
          log( 'Build css' );
-         // await css( data.paths );
+         await css( data.paths );
 
          /* build js */
          log( 'Build js' );
          // await js( data.paths );
+
       } catch( error ) {
          console.log( error );
       }
