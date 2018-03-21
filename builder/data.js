@@ -64,7 +64,7 @@ const data = {
       },
       {
          type: 'html',
-         src: SRC_DIR + 'index.mustache',
+         src: SRC_DIR + 'index.njk',
          dist: DIST_DIR + 'index.html'
       },
       {

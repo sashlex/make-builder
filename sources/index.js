@@ -7,4 +7,4 @@ const app = express();
 app.use( '/styles', express.static( 'styles'));
 app.use( '/scripts', express.static( 'scripts'));
 app.get( '/', ( req, res ) => res.sendFile( path.join( __dirname + '/index.html' )));
-app.listen( 3000, () => console.log( 'App listening on port 3000!' ));
+app.listen( 3333, () => console.log( 'App listening on port 3333!' ));

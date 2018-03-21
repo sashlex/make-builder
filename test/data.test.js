@@ -18,8 +18,9 @@ test.cb( 'directories exists', t => {
 });
 
 test.cb( 'paths is array', t => {
-   t.plan( 1 );
+   t.plan( 2 );
 
    t.deepEqual( Array.isArray( data.paths ), true );
+   t.deepEqual( data.paths.length > 0, true );
    return t.end();
 });

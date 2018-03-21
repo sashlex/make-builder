@@ -3,6 +3,7 @@
 /* libs */
 const data = require( './data' );
 const Path = require( 'path' );
+const chokidar = require( 'chokidar' );
 const log = data.log;
 
 /* workers */
@@ -23,7 +24,7 @@ class Builder {
     * @param { string } argument
     * @return { undefined }
     */
-   build( command, argument ) {
+   async build( command, argument ) {
 
       /* timer */
       this.start = new Date();
@@ -33,10 +34,10 @@ class Builder {
       command = argument ? ( command + 'Type' ) : command;
 
       /* call job by type */
-      command === 'build' ? this.buildAll().then( _=> this.afterAll()) :
-         command === 'buildType' ? this.buildType( argument ).then( _=> this.afterAll()) :
-         command === 'watch' ? this.watch() :
-         command === 'watchType' ? this.watch( argument ) :
+      return command === 'build' ? ( await this.buildAll(), await this.afterAll()) :
+         command === 'buildType' ? ( await this.buildType( argument ), await this.afterAll()) :
+         command === 'watch' ? await this.watch() :
+         command === 'watchType' ? await this.watch( argument ) :
          command === 'clean' || command === 'cleanType' ? this.clean( argument ) :
          log( 'Command not found' );
    }
@@ -62,7 +63,7 @@ class Builder {
 
          /* build js */
          log( 'Build js' );
-         // await js( data.paths );
+         await js( data.paths );
 
       } catch( error ) {
          console.log( error );
@@ -76,11 +77,31 @@ class Builder {
     * @return { undefined }
     */
    buildType( type ) {
-      type === 'asset' ? log( 'Build asset' ) && asset( data.paths ) :
-   //       type === 'html' ? log( 'Build html' ) && html( data.paths ) :
-   //       type === 'css' ? log( 'Build css' ) && css( data.paths ) :
-   //       type === 'js' ? log( 'Build js' ) && js( data.paths ) :
+      return type === 'asset' ? log( 'Build asset' ) || asset( data.paths ) :
+         type === 'html' ? log( 'Build html' ) || html( data.paths ) :
+         type === 'css' ? log( 'Build css' ) || css( data.paths ) :
+         type === 'js' ? log( 'Build js' ) || js( data.paths ) :
          log( 'Source type not found:', type );
+   }
+
+   /**
+    * watch files by type
+    * @param { string } type - file type
+    * @return { object }
+    */
+   watch( type ) {
+      // return await this.buildAll()
+   }
+
+   /**
+    * After build
+    * @return { object }
+    */
+   afterAll() {
+
+      /* timer */
+      this.end = new Date();
+      return log( '--- ok ---', (( this.end - this.start ) / 1000 ) + ' sec' );
    }
 }
 
