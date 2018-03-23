@@ -11,11 +11,14 @@ const BUILDER_DIR = Path.normalize( ROOT_DIR + '/builder' );
 /* workers directory */
 const WORKER_DIR = Path.normalize( BUILDER_DIR + '/workers' );
 
+/* project directory */
+const PROJECT_DIR = Path.normalize( ROOT_DIR + '/project' );
+
 /* sources directory */
-const SRC_DIR = Path.normalize( ROOT_DIR + '/src' );
+const SRC_DIR = Path.normalize( PROJECT_DIR + '/src' );
 
 /* distribution directory */
-const DIST_DIR = Path.normalize( ROOT_DIR + '/dist' );
+const DIST_DIR = Path.normalize( PROJECT_DIR + '/dist' );
 
 /**
  * Show message in console
@@ -59,32 +62,32 @@ const data = {
       /* root */
       {
          type: 'asset',
-         src: SRC_DIR + 'package.json',
-         dist: DIST_DIR + 'package.json'
+         src: SRC_DIR + '/package.json',
+         dist: DIST_DIR + '/package.json'
       },
       {
          type: 'html',
-         src: SRC_DIR + 'index.njk',
-         dist: DIST_DIR + 'index.html'
+         src: SRC_DIR + '/index.njk',
+         dist: DIST_DIR + '/index.html'
       },
       {
          type: 'js',
-         src: SRC_DIR + 'index.js',
-         dist: DIST_DIR + 'index.js'
+         src: SRC_DIR + '/index.js',
+         dist: DIST_DIR + '/index.js'
       },
 
       /* styles */
       {
          type: 'css',
-         src: SRC_DIR + 'styles/styles.less',
-         dist: DIST_DIR + 'styles/styles.css'
+         src: SRC_DIR + '/styles/styles.less',
+         dist: DIST_DIR + '/styles/styles.css'
       },
 
       /* scripts */
       {
          type: 'js',
-         src: SRC_DIR + 'scripts/script.js',
-         dist: DIST_DIR + 'scripts/script.js'
+         src: SRC_DIR + '/scripts/script.js',
+         dist: DIST_DIR + '/scripts/script.js'
       }
    ]
 };
@@ -93,6 +96,7 @@ const data = {
 data.paths = data.paths.map( v => {
    v.src && ( v.src = Path.normalize( v.src ));
    v.dist && ( v.dist = Path.normalize( v.dist ));
+   return v;
 });
 
 module.exports = data;

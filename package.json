@@ -15,6 +15,7 @@
    "devDependencies": {
       "ava": "^0.24.0",
       "chokidar": "^2.0.2",
+      "clone": "^1.0.4",
       "js-beautify": "^1.7.5",
       "less": "^2.7.3",
       "nunjucks": "^3.1.2",

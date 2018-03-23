@@ -8,6 +8,9 @@ const Fs = require( 'fs' );
 const stat = Util.promisify( Fs.stat );
 const writeFile = Util.promisify( Fs.writeFile );
 
+/* configure lib */
+Nunjucks.configure({ noCache: true }); // always recompile
+
 /**
  * Html builder
  * @param { object } data

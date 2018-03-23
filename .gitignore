@@ -1,9 +1,9 @@
 # disallow
 node_modules
 npm-debug.log
-dist
 sources/node_modules
 test/tmp
+project/dist/*
 
 # allow
 !.gitkeep
