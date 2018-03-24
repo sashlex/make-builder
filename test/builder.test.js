@@ -337,3 +337,287 @@ test.cb( 'watch asset', t => {
       .then( _=> resetSpies() || t.end())
       .catch( e => console.log( e ));
 });
+
+test.cb( 'watch html', t => {
+   t.plan( 6 );
+
+   const data = {
+      paths: [{
+         type: 'html',
+         src: `${ tc.SRC_DIR }/test.njk`,
+         dist: `${ tc.DIST_DIR }/test.html`,
+      },{
+         type: 'asset',
+         src: `${ tc.SRC_DIR }/test.json`,
+         dist: `${ tc.DIST_DIR }/test.json`,
+      }]
+   };
+   const data_1 =  { // for test whatch html file below
+      paths: [ data.paths[ 0 ]]
+   };
+
+   /* update "builder" module data for test */
+   builder.__set__( 'data', data );
+
+   /* create test files */
+   Fs.writeFileSync( data.paths[ 0 ].src, '{% set z = "test" %}test {{ z }}' );
+   Fs.writeFileSync( data.paths[ 1 ].src, JSON.stringify({ c: 'c' }));
+
+   /* execute */
+   Promise.resolve()
+      .then( _=> builder.build( 'watch', 'html' ))
+
+   /* wait until watcher has started */
+      .then( _=> new Promise( res => setTimeout( _=> res(), 1000 )))
+      .then( _=> {
+
+         /* update html file */
+         Fs.writeFileSync( data.paths[ 0 ].src, '{% set z = "test test" %}test {{ z }}' );
+         return new Promise( res => setTimeout( _=> res(), 1000 )); // wait until watch worker has executed
+      })
+      .then( _=> {
+
+         /* check called chain */
+         t.deepEqual( spyBuildType.callCount, 1 );
+         t.deepEqual( spyHtml.withArgs( data_1 ).callCount, 1 ); // check is worker executed with our changed file
+         t.deepEqual( spyAsset.callCount, 1 ); // check is asset worker executed once in builder.buildAll()
+      })
+      .then( _=> {
+
+         /* update asset file */
+         Fs.writeFileSync( data.paths[ 1 ].src, JSON.stringify({ d: 'd' }));
+         return new Promise( res => setTimeout( _=> res(), 1000 )); // wait until watch worker has executed
+      })
+      .then( _=> {
+
+         /* check called chain ( asset worker should not executed, only html ) */
+         t.deepEqual( spyBuildType.callCount, 1 ); // executed once on html file not on asset
+         t.deepEqual( spyHtml.withArgs( data_1 ).callCount, 1 ); // executed on previous step
+         t.deepEqual( spyAsset.callCount, 1 ); // executed once on builder.buildAll()
+      })
+      .then( _=> builder.watchClose()) // close watcher
+      .then( _=> resetSpies() || t.end())
+      .catch( e => console.log( e ));
+});
+
+test.cb( 'watch css', t => {
+   t.plan( 6 );
+
+   const data = {
+      paths: [{
+         type: 'css',
+         src: `${ tc.SRC_DIR }/test.less`,
+         dist: `${ tc.DIST_DIR }/test.css`,
+      },{
+         type: 'asset',
+         src: `${ tc.SRC_DIR }/test.json`,
+         dist: `${ tc.DIST_DIR }/test.json`,
+      }]
+   };
+
+   const data_1 =  { // for test whatch css file below
+      paths: [ data.paths[ 0 ]]
+   };
+
+   /* update "builder" module data for test */
+   builder.__set__( 'data', data );
+
+   /* create test files */
+   Fs.writeFileSync( data.paths[ 0 ].src, '@color:blue;#header{color:@color;}' );
+   Fs.writeFileSync( data.paths[ 1 ].src, JSON.stringify({ d: 'd' }));
+
+   /* execute */
+   Promise.resolve()
+      .then( _=> builder.build( 'watch', 'css' ))
+
+   /* wait until watcher has started */
+      .then( _=> new Promise( res => setTimeout( _=> res(), 1000 )))
+      .then( _=> {
+
+         /* update less file */
+         Fs.writeFileSync( data.paths[ 0 ].src, '@color:black;#header{color:@color;}' );
+         return new Promise( res => setTimeout( _=> res(), 1000 )); // wait until watch worker has executed
+      })
+      .then( _=> {
+
+         /* check called chain */
+         t.deepEqual( spyBuildType.callCount, 1 );
+         t.deepEqual( spyCss.withArgs( data_1 ).callCount, 1 ); // check is worker executed with our changed file
+         t.deepEqual( spyAsset.callCount, 1 ); // check is asset worker executed once in builder.buildAll()
+      })
+      .then( _=> {
+
+         /* update asset test file */
+         Fs.writeFileSync( data.paths[ 1 ].src, JSON.stringify({ e: 'e' }));
+         return new Promise( res => setTimeout( _=> res(), 1000 )); // wait until watch worker has executed
+      })
+      .then( _=> {
+
+         /* check called chain ( asset worker should not executed, only css ) */
+         t.deepEqual( spyBuildType.callCount, 1 ); // executed once on css file not on asset
+         t.deepEqual( spyCss.withArgs( data_1 ).callCount, 1 ); // executed on previous step
+         t.deepEqual( spyAsset.callCount, 1 ); // executed once on builder.buildAll()
+      })
+      .then( _=> builder.watchClose()) // close watcher
+      .then( _=> resetSpies() || t.end())
+      .catch( e => console.log( e ));
+});
+
+test.cb( 'watch js', t => {
+   t.plan( 6 );
+
+   const data = {
+      paths: [{
+         type: 'js',
+         src: `${ tc.SRC_DIR }/test.js`,
+         dist: `${ tc.DIST_DIR }/test.js`,
+      },{
+         type: 'asset',
+         src: `${ tc.SRC_DIR }/test.json`,
+         dist: `${ tc.DIST_DIR }/test.json`,
+      }]
+   };
+
+   const data_1 =  { // for test whatch js file below
+      paths: [ data.paths[ 0 ]]
+   };
+
+   /* update "builder" module data for test */
+   builder.__set__( 'data', data );
+
+   /* create test files */
+   Fs.writeFileSync( data.paths[ 0 ].src, 'let x=1;' );
+   Fs.writeFileSync( data.paths[ 1 ].src, JSON.stringify({ e: 'e' }));
+
+   /* execute */
+   Promise.resolve()
+      .then( _=> builder.build( 'watch', 'js' ))
+
+   /* wait until watcher has started */
+      .then( _=> new Promise( res => setTimeout( _=> res(), 1000 )))
+      .then( _=> {
+
+         /* update js file */
+         Fs.writeFileSync( data.paths[ 0 ].src, 'let y=2;' );
+         return new Promise( res => setTimeout( _=> res(), 1000 )); // wait until watch worker has executed
+      })
+      .then( _=> {
+
+         /* check called chain */
+         t.deepEqual( spyBuildType.callCount, 1 );
+         t.deepEqual( spyJs.withArgs( data_1 ).callCount, 1 ); // check is worker executed with our changed file
+         t.deepEqual( spyAsset.callCount, 1 ); // check is asset worker executed once in builder.buildAll()
+      })
+      .then( _=> {
+
+         /* update js test file */
+         Fs.writeFileSync( data.paths[ 1 ].src, JSON.stringify({ f: 'f' }));
+         return new Promise( res => setTimeout( _=> res(), 1000 )); // wait until watch worker has executed
+      })
+      .then( _=> {
+
+         /* check called chain ( asset worker should not executed, only js ) */
+         t.deepEqual( spyBuildType.callCount, 1 ); // executed once on js file not on asset
+         t.deepEqual( spyJs.withArgs( data_1 ).callCount, 1 ); // executed on previous step
+         t.deepEqual( spyAsset.callCount, 1 ); // executed once on builder.buildAll()
+      })
+      .then( _=> builder.watchClose()) // close watcher
+      .then( _=> resetSpies() || t.end())
+      .catch( e => console.log( e ));
+});
+
+test.cb( 'clean', t => {
+   t.plan( 6 );
+
+   const data = {
+      paths: [{
+         type: 'asset',
+         src: `${ tc.SRC_DIR }/test_1`,
+         dist: `${ tc.DIST_DIR }/test_1/test`,
+      },{
+         type: 'js',
+         src: `${ tc.SRC_DIR }/test.js`,
+         dist: `${ tc.DIST_DIR }/test.js`,
+      },{
+         type: 'asset',
+         src: `${ tc.SRC_DIR }/test.json`,
+         dist: `${ tc.DIST_DIR }/test.json`,
+      }]
+   };
+
+   /* update "builder" module data for test */
+   builder.__set__( 'data', data );
+
+   /* create test files */
+   Fs.mkdirSync( data.paths[ 0 ].src );
+   Fs.writeFileSync( data.paths[ 1 ].src, 'let i=0;' );
+   Fs.writeFileSync( data.paths[ 2 ].src, JSON.stringify({ g: 'g' }));
+
+   /* execute */
+   Promise.resolve()
+
+   /* check files exists */
+      .then( _=> {
+         t.deepEqual( Fs.lstatSync( data.paths[ 0 ].src ).isDirectory(), true );
+         t.deepEqual( Fs.readFileSync( data.paths[ 1 ].src, 'utf8' ), 'let i=0;' );
+         t.deepEqual( JSON.parse( Fs.readFileSync( data.paths[ 2 ].src, 'utf8' )), { g: 'g' } );
+      })
+      .then( _=> builder.build( 'clean' ))
+
+   /* check files deleted */
+      .then( _=> {
+         t.deepEqual( Fs.existsSync( data.paths[ 0 ].src ), false );
+         t.deepEqual( Fs.existsSync( data.paths[ 1 ].src ), false );
+         t.deepEqual( Fs.existsSync( data.paths[ 2 ].src ), false );
+      })
+      .then( _=> resetSpies() || t.end())
+      .catch( e => console.log( e ));
+});
+
+test.cb( 'clean asset', t => {
+   t.plan( 6 );
+
+   const data = {
+      paths: [{
+         type: 'asset',
+         src: `${ tc.SRC_DIR }/test_2`,
+         dist: `${ tc.DIST_DIR }/test_2/test`,
+      },{
+         type: 'js',
+         src: `${ tc.SRC_DIR }/test.js`,
+         dist: `${ tc.DIST_DIR }/test.js`,
+      },{
+         type: 'asset',
+         src: `${ tc.SRC_DIR }/test.json`,
+         dist: `${ tc.DIST_DIR }/test.json`,
+      }]
+   };
+
+   /* update "builder" module data for test */
+   builder.__set__( 'data', data );
+
+   /* create test files */
+   Fs.mkdirSync( data.paths[ 0 ].src );
+   Fs.writeFileSync( data.paths[ 1 ].src, 'let j=10;' );
+   Fs.writeFileSync( data.paths[ 2 ].src, JSON.stringify({ h: 'h' }));
+
+   /* execute */
+   Promise.resolve()
+
+   /* check files exists */
+      .then( _=> {
+         t.deepEqual( Fs.lstatSync( data.paths[ 0 ].src ).isDirectory(), true );
+         t.deepEqual( Fs.readFileSync( data.paths[ 1 ].src, 'utf8' ), 'let j=10;' );
+         t.deepEqual( JSON.parse( Fs.readFileSync( data.paths[ 2 ].src, 'utf8' )), { h: 'h' } );
+      })
+      .then( _=> builder.build( 'clean', 'asset' ))
+
+   /* check files deleted */
+      .then( _=> {
+         t.deepEqual( Fs.existsSync( data.paths[ 0 ].src ), false );
+         t.deepEqual( Fs.existsSync( data.paths[ 1 ].src ), true );
+         t.deepEqual( Fs.existsSync( data.paths[ 2 ].src ), false );
+      })
+      .then( _=> resetSpies() || t.end())
+      .catch( e => console.log( e ));
+});

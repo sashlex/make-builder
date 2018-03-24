@@ -7,6 +7,7 @@ const Fs = require( 'fs' );
 const Util = require( 'util' );
 const stat = Util.promisify( Fs.stat );
 const chokidar = require( 'chokidar' );
+const shell = require( 'shelljs' );
 const clone = require( 'clone' );
 const log = data.log;
 
@@ -19,7 +20,7 @@ const js = require( data.WORKER_DIR + '/js' );
 /**
  * Class Builder represents application builder
  * @class
- */
+ **/
 class Builder {
 
    /**
@@ -49,7 +50,7 @@ class Builder {
    /**
     * Build all types
     * @return { object } Promise
-    */
+    **/
    async buildAll() {
       try {
 
@@ -80,7 +81,7 @@ class Builder {
     * @param { string } type - source type
     * @param { object } jobData - data for build
     * @return { undefined }
-    */
+    **/
    async buildType( type, jobData ) {
       jobData = jobData || data;
       return type === 'asset' ? log( 'Build asset' ) || await asset( jobData ) :
@@ -92,9 +93,9 @@ class Builder {
 
    /**
     * watch files by type
-    * @param { string } type - file type
+    * @param { string } type - data type
     * @return { object } Return watching paths
-    */
+    **/
    async watch( type ) {
       await this.buildAll(); // prepare
 
@@ -137,9 +138,17 @@ class Builder {
    }
 
    /**
+    * Close watcher
+    * @return { object }
+    **/
+   watchClose() {
+      return this.watcher && this.watcher.close();
+   }
+
+   /**
     * After build
     * @return { object }
-    */
+    **/
    afterAll() {
 
       /* timer */
@@ -148,12 +157,30 @@ class Builder {
    }
 
    /**
-    * Close watcher
+    * After build
+    * @param { string } type - data type
     * @return { object }
-    */
-   watchClose() {
-      return this.watcher && this.watcher.close();
+    **/
+   clean( type ) {
+
+      /* check params */
+      if( ! data.paths || ! data.paths.length ) {
+         throw new Error( 'There are no files to delete!' );
+      }
+
+      /* get paths */
+      const paths =  data.paths.map( v => {
+         if( ! type ) { // return all if no type provided
+            return v.src;
+         }
+         if( v.type === type ) { // filter if type provided
+            return v.src;
+         }
+         return undefined;
+      }).filter( v => v );
+      return shell.rm( '-rf', paths );
    }
+
 }
 
 module.exports = new Builder();
