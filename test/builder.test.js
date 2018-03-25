@@ -621,3 +621,18 @@ test.cb( 'clean asset', t => {
       .then( _=> resetSpies() || t.end())
       .catch( e => console.log( e ));
 });
+
+test.cb( 'bad command', t => {
+   t.plan( 1 );
+
+   builder.__set__( 'log', _=>_ );
+
+   /* execute */
+   Promise.resolve()
+      .then( _=> builder.build( 'bad', 'command' ))
+
+   /* check message*/
+      .then( error => t.deepEqual( error , 'Command not found!' ))
+      .then( _=> resetSpies() || t.end())
+      .catch( e => console.log( e ));
+});

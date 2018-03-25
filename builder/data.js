@@ -27,8 +27,8 @@ const DIST_DIR = Path.normalize( PROJECT_DIR + '/dist' );
  */
 function log() {
    const date = new Date();
-   const hours = date.getHours();
-   const minutes = date.getMinutes();
+   const hours = ( '0' + date.getHours()).slice( -2 );
+   const minutes = ( '0' + date.getMinutes()).slice( -2 );
    const seconds = ( '0' + date.getSeconds()).slice( -2 );
    const miliseconds = date.getMilliseconds();
    const stack = new Error().stack;

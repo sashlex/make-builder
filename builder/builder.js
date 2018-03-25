@@ -44,7 +44,7 @@ class Builder {
          command === 'watch' ? await this.watch() :
          command === 'watchType' ? await this.watch( argument ) :
          command === 'clean' || command === 'cleanType' ? this.clean( argument ) :
-         log( 'Command not found' );
+         log( 'Command not found!' );
    }
 
    /**
@@ -88,7 +88,7 @@ class Builder {
          type === 'html' ? log( 'Build html' ) || await html( jobData ) :
          type === 'css' ? log( 'Build css' ) || await css( jobData ) :
          type === 'js' ? log( 'Build js' ) || await js( jobData ) :
-         log( 'Source type not found:', type );
+         log( `Source type not found: ${ type }` );
    }
 
    /**

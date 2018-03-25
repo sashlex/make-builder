@@ -12,7 +12,7 @@ test.cb( 'directories exists', t => {
    t.deepEqual( Fs.existsSync( data.ROOT_DIR ), true );
    t.deepEqual( Fs.existsSync( data.BUILDER_DIR ), true );
    t.deepEqual( Fs.existsSync( data.WORKER_DIR ), true );
-   t.deepEqual( Fs.existsSync( data.SOURCE_DIR ), true );
+   t.deepEqual( Fs.existsSync( data.SRC_DIR ), true );
    t.deepEqual( Fs.existsSync( data.DIST_DIR ), true );
    return t.end();
 });

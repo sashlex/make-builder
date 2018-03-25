@@ -4,6 +4,7 @@ npm-debug.log
 sources/node_modules
 test/tmp
 project/dist/*
+.projectile
 
 # allow
 !.gitkeep

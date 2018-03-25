@@ -8,7 +8,7 @@
       "build": "node builder build",
       "watch": "node builder watch",
       "clean": "node builder clean",
-      "app": "cd ./dist && DEBUG=express:* node index"
+      "app": "[ ! -d './node_modules' ] && npm install; DEBUG=express:* node ./project/dist/index"
    },
    "author": "sashlex",
    "license": "MIT",

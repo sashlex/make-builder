@@ -11,7 +11,7 @@
  * npm run clean
  * npm run clean html [ asset, html, css, js ]
  * npm run app
- * npm run test
+ * npm test
  **/
 
 const builder = require( './builder' );
