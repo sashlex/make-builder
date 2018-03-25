@@ -41,9 +41,8 @@ class Builder {
       /* call job by type */
       return command === 'build' ? ( await this.buildAll(), await this.afterAll()) :
          command === 'buildType' ? ( await this.buildType( argument ), await this.afterAll()) :
-         command === 'watch' ? await this.watch() :
-         command === 'watchType' ? await this.watch( argument ) :
-         command === 'clean' || command === 'cleanType' ? this.clean( argument ) :
+         command === 'watch' || command === 'watchType' ? await this.watch( argument ) :
+         command === 'clean' || command === 'cleanType' ? ( await this.clean( argument ), await this.afterAll()) :
          log( 'Command not found!' );
    }
 
@@ -171,10 +170,10 @@ class Builder {
       /* get paths */
       const paths =  data.paths.map( v => {
          if( ! type ) { // return all if no type provided
-            return v.src;
+            return v.dist;
          }
          if( v.type === type ) { // filter if type provided
-            return v.src;
+            return v.dist;
          }
          return undefined;
       }).filter( v => v );
