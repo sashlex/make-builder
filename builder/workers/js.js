@@ -10,7 +10,7 @@ const readFile = Util.promisify( Fs.readFile );
 const writeFile = Util.promisify( Fs.writeFile );
 
 /**
- * Css builder
+ * Js builder
  * @param { object } data
  * @param { array } data.paths
  * @param { boolean } data.test
