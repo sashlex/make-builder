@@ -533,7 +533,7 @@ test.cb( 'clean', t => {
       paths: [{
          type: 'asset',
          src: `${ tc.SRC_DIR }/test_1`,
-         dist: `${ tc.DIST_DIR }/test_1/test`,
+         dist: `${ tc.DIST_DIR }/test_1`,
       },{
          type: 'js',
          src: `${ tc.SRC_DIR }/test.js`,
@@ -549,26 +549,26 @@ test.cb( 'clean', t => {
    builder.__set__( 'data', data );
 
    /* create test files */
-   Fs.mkdirSync( data.paths[ 0 ].src );
-   Fs.writeFileSync( data.paths[ 1 ].src, 'let i=0;' );
-   Fs.writeFileSync( data.paths[ 2 ].src, JSON.stringify({ g: 'g' }));
+   Fs.mkdirSync( data.paths[ 0 ].dist );
+   Fs.writeFileSync( data.paths[ 1 ].dist, 'let i=0;' );
+   Fs.writeFileSync( data.paths[ 2 ].dist, JSON.stringify({ g: 'g' }));
 
    /* execute */
    Promise.resolve()
 
    /* check files exists */
       .then( _=> {
-         t.deepEqual( Fs.lstatSync( data.paths[ 0 ].src ).isDirectory(), true );
-         t.deepEqual( Fs.readFileSync( data.paths[ 1 ].src, 'utf8' ), 'let i=0;' );
-         t.deepEqual( JSON.parse( Fs.readFileSync( data.paths[ 2 ].src, 'utf8' )), { g: 'g' } );
+         t.deepEqual( Fs.lstatSync( data.paths[ 0 ].dist ).isDirectory(), true );
+         t.deepEqual( Fs.readFileSync( data.paths[ 1 ].dist, 'utf8' ), 'let i=0;' );
+         t.deepEqual( JSON.parse( Fs.readFileSync( data.paths[ 2 ].dist, 'utf8' )), { g: 'g' } );
       })
       .then( _=> builder.build( 'clean' ))
 
    /* check files deleted */
       .then( _=> {
-         t.deepEqual( Fs.existsSync( data.paths[ 0 ].src ), false );
-         t.deepEqual( Fs.existsSync( data.paths[ 1 ].src ), false );
-         t.deepEqual( Fs.existsSync( data.paths[ 2 ].src ), false );
+         t.deepEqual( Fs.existsSync( data.paths[ 0 ].dist ), false );
+         t.deepEqual( Fs.existsSync( data.paths[ 1 ].dist ), false );
+         t.deepEqual( Fs.existsSync( data.paths[ 2 ].dist ), false );
       })
       .then( _=> resetSpies() || t.end())
       .catch( e => console.log( e ));
@@ -581,7 +581,7 @@ test.cb( 'clean asset', t => {
       paths: [{
          type: 'asset',
          src: `${ tc.SRC_DIR }/test_2`,
-         dist: `${ tc.DIST_DIR }/test_2/test`,
+         dist: `${ tc.DIST_DIR }/test_2`,
       },{
          type: 'js',
          src: `${ tc.SRC_DIR }/test.js`,
@@ -596,27 +596,27 @@ test.cb( 'clean asset', t => {
    /* update "builder" module data for test */
    builder.__set__( 'data', data );
 
-   /* create test files */
-   Fs.mkdirSync( data.paths[ 0 ].src );
-   Fs.writeFileSync( data.paths[ 1 ].src, 'let j=10;' );
-   Fs.writeFileSync( data.paths[ 2 ].src, JSON.stringify({ h: 'h' }));
+   /* create test files in dist then clean that */
+   Fs.mkdirSync( data.paths[ 0 ].dist );
+   Fs.writeFileSync( data.paths[ 1 ].dist, 'let j=10;' );
+   Fs.writeFileSync( data.paths[ 2 ].dist, JSON.stringify({ h: 'h' }));
 
    /* execute */
    Promise.resolve()
 
    /* check files exists */
       .then( _=> {
-         t.deepEqual( Fs.lstatSync( data.paths[ 0 ].src ).isDirectory(), true );
-         t.deepEqual( Fs.readFileSync( data.paths[ 1 ].src, 'utf8' ), 'let j=10;' );
-         t.deepEqual( JSON.parse( Fs.readFileSync( data.paths[ 2 ].src, 'utf8' )), { h: 'h' } );
+         t.deepEqual( Fs.lstatSync( data.paths[ 0 ].dist ).isDirectory(), true );
+         t.deepEqual( Fs.readFileSync( data.paths[ 1 ].dist, 'utf8' ), 'let j=10;' );
+         t.deepEqual( JSON.parse( Fs.readFileSync( data.paths[ 2 ].dist, 'utf8' )), { h: 'h' } );
       })
       .then( _=> builder.build( 'clean', 'asset' ))
 
    /* check files deleted */
       .then( _=> {
-         t.deepEqual( Fs.existsSync( data.paths[ 0 ].src ), false );
-         t.deepEqual( Fs.existsSync( data.paths[ 1 ].src ), true );
-         t.deepEqual( Fs.existsSync( data.paths[ 2 ].src ), false );
+         t.deepEqual( Fs.existsSync( data.paths[ 0 ].dist ), false );
+         t.deepEqual( Fs.existsSync( data.paths[ 1 ].dist ), true );
+         t.deepEqual( Fs.existsSync( data.paths[ 2 ].dist ), false );
       })
       .then( _=> resetSpies() || t.end())
       .catch( e => console.log( e ));
